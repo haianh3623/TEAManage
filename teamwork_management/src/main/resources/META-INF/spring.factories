@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  personal.project.teamwork_management.config.DotenvPostProcessor

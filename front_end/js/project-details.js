@@ -1,3 +1,216 @@
+// --- Export Project & Member Report Logic ---
+document.addEventListener('DOMContentLoaded', function() {
+    const exportProjectBtn = document.getElementById('exportProjectReportBtn');
+    const exportMemberBtn = document.getElementById('exportMemberReportBtn');
+    const memberReportModal = document.getElementById('memberReportModal');
+    const memberReportForm = document.getElementById('memberReportForm');
+    const memberReportDownloadBtn = document.getElementById('memberReportDownloadBtn');
+    const memberSelect = document.getElementById('memberReportMemberId');
+    const fromDateInput = document.getElementById('memberReportFromDate');
+    const toDateInput = document.getElementById('memberReportToDate');
+
+    // --- Báo cáo dự án ---
+    if (exportProjectBtn) {
+        exportProjectBtn.addEventListener('click', function() {
+            showProjectReportFormatDialog();
+        });
+    }
+
+    function showProjectReportFormatDialog() {
+                const modalHtml = `
+                <div class="modal fade" id="projectReportFormatModal" tabindex="-1" aria-labelledby="projectReportFormatModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="projectReportFormatModalLabel">Chọn định dạng báo cáo dự án</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex gap-3 justify-content-center">
+                                    <button class="btn btn-outline-danger" id="downloadProjectPdfBtn"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</button>
+                                    <button class="btn btn-outline-success" id="downloadProjectExcelBtn"><i class="bi bi-file-earmark-excel me-2"></i>Excel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = modalHtml;
+                document.body.appendChild(tempDiv);
+                const modalEl = tempDiv.querySelector('#projectReportFormatModal');
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+                modalEl.querySelector('#downloadProjectPdfBtn').onclick = function() {
+                        modal.hide();
+                        exportProjectReport('pdf');
+                };
+                modalEl.querySelector('#downloadProjectExcelBtn').onclick = function() {
+                        modal.hide();
+                        exportProjectReport('excel');
+                };
+                modalEl.addEventListener('hidden.bs.modal', function() {
+                        tempDiv.remove();
+                });
+    }
+
+    async function exportProjectReport(type) {
+        const projectId = getProjectIdFromUrl();
+        if (!projectId) return;
+        const baseApi = "http://localhost:8080";
+        let genUrl = '', fileType = '';
+        if (type === 'pdf') {
+            genUrl = `${baseApi}/api/reports/projects/${projectId}/pdf`;
+            fileType = 'pdf';
+        } else {
+            genUrl = `${baseApi}/api/reports/projects/${projectId}/excel`;
+            fileType = 'excel';
+        }
+        let headers = {};
+        if (typeof authUtils !== 'undefined' && authUtils.isAuthenticated()) {
+            headers = authUtils.getAuthHeader();
+        }
+        try {
+            const res = await fetch(genUrl, { method: 'POST', headers });
+            if (!res.ok) {
+                const errText = await res.text();
+                throw new Error('Lỗi tạo file: ' + errText);
+            }
+            const data = await res.json();
+            if (!data.path) throw new Error('Không nhận được đường dẫn file');
+            let downloadEndpoint = fileType === 'pdf' ? `${baseApi}/api/reports/download/pdf` : `${baseApi}/api/reports/download`;
+            const downloadRes = await fetch(`${downloadEndpoint}?path=${encodeURIComponent(data.path)}`, { headers });
+            if (!downloadRes.ok) {
+                const errText = await downloadRes.text();
+                throw new Error('Lỗi tải file: ' + errText);
+            }
+            const blob = await downloadRes.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileType === 'pdf' ? 'report.pdf' : 'report.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            }, 1000);
+        } catch (err) {
+            alert('Lỗi xuất báo cáo: ' + (err.message || err));
+        }
+    }
+
+    // --- Báo cáo thành viên ---
+    if (exportMemberBtn) {
+        exportMemberBtn.addEventListener('click', async function() {
+            await showMemberReportModal();
+        });
+    }
+
+    async function showMemberReportModal() {
+        // Luôn fetch lại dữ liệu project mới nhất từ API khi mở modal
+        const projectId = getProjectIdFromUrl();
+        let project = null;
+        try {
+            const baseApi = "http://localhost:8080";
+            let headers = {};
+            if (typeof authUtils !== 'undefined' && authUtils.isAuthenticated()) {
+                headers = authUtils.getAuthHeader();
+            }
+            const res = await fetch(`${baseApi}/api/projects/${projectId}`, { headers });
+            if (!res.ok) throw new Error('Không thể lấy dữ liệu dự án');
+            project = await res.json();
+        } catch (e) {
+            alert('Không thể lấy dữ liệu dự án: ' + (e.message || e));
+            return;
+        }
+        // Lấy ngày bắt đầu/kết thúc
+        let startDate = project.startDate ? project.startDate.split('T')[0] : '';
+        let endDate = '';
+        if (project.endDate) {
+            const now = new Date();
+            const projectEnd = new Date(project.endDate);
+            endDate = (projectEnd < now) ? project.endDate.split('T')[0] : now.toISOString().split('T')[0];
+        } else {
+            endDate = new Date().toISOString().split('T')[0];
+        }
+        fromDateInput.value = startDate;
+        toDateInput.value = endDate;
+        // Danh sách thành viên
+        memberSelect.innerHTML = '<option value="">-- Tất cả thành viên --</option>';
+        let members = project.members || project.projectMembers || [];
+        members.forEach(m => {
+            const name = m.fullName || m.name || (m.firstName ? (m.firstName + ' ' + (m.lastName || '')) : m.email || m.userEmail || m.id);
+            memberSelect.innerHTML += `<option value="${m.id}">${name}</option>`;
+        });
+        const modal = new bootstrap.Modal(memberReportModal);
+        modal.show();
+    }
+
+    if (memberReportDownloadBtn) {
+        memberReportDownloadBtn.addEventListener('click', async function() {
+            await handleMemberReportDownload();
+        });
+    }
+
+    async function handleMemberReportDownload() {
+        const projectId = getProjectIdFromUrl();
+        const fromDate = fromDateInput.value;
+        const toDate = toDateInput.value;
+        const memberId = memberSelect.value;
+        const format = memberReportForm.querySelector('input[name="format"]:checked').value;
+        const baseApi = "http://localhost:8080";
+        let url = '', method = 'POST', isDownloadDirect = false;
+        let headers = {};
+        if (typeof authUtils !== 'undefined' && authUtils.isAuthenticated()) {
+            headers = authUtils.getAuthHeader();
+        }
+        try {
+            if (!memberId) {
+                // Không chọn thành viên: báo cáo tổng hợp
+                url = `${baseApi}/api/reports/projects/${projectId}/members/${format}?from=${fromDate}&to=${toDate}`;
+            } else {
+                // Chọn thành viên: báo cáo cá nhân
+                url = `${baseApi}/api/reports/member/${projectId}/${format}?memberId=${memberId}&fromDate=${fromDate}&toDate=${toDate}`;
+                method = 'GET';
+                isDownloadDirect = true;
+            }
+            let res;
+            if (method === 'POST') {
+                res = await fetch(url, { method, headers });
+                if (!res.ok) throw new Error(await res.text());
+                const data = await res.json();
+                if (!data.path) throw new Error('Không nhận được đường dẫn file');
+                // Download file
+                let downloadEndpoint = `${baseApi}/api/reports/projects/${projectId}/members/download/${format}`;
+                const downloadRes = await fetch(`${downloadEndpoint}?path=${encodeURIComponent(data.path)}`, { headers });
+                if (!downloadRes.ok) throw new Error(await downloadRes.text());
+                const blob = await downloadRes.blob();
+                triggerDownload(blob, format);
+            } else {
+                // GET trực tiếp file
+                res = await fetch(url, { method, headers });
+                if (!res.ok) throw new Error(await res.text());
+                const blob = await res.blob();
+                triggerDownload(blob, format);
+            }
+        } catch (err) {
+            alert('Lỗi xuất báo cáo thành viên: ' + (err.message || err));
+        }
+    }
+
+    function triggerDownload(blob, format) {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = format === 'pdf' ? 'member-report.pdf' : 'member-report.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        }, 1000);
+    }
+});
 /**
  * Project Details Page JavaScript
  * Handles project details display, tabs, and interactions
@@ -1031,11 +1244,13 @@ function uploadFile() {
             
             console.log('🔄 Uploading files to project:', projectId);
             
-            const response = await fetch(`${apiClient.baseURL}/files/upload`, {
+            let headers = {};
+            if (typeof authUtils !== 'undefined' && authUtils.getAuthHeader) {
+                headers = authUtils.getAuthHeader();
+            }
+            const response = await fetch('/api/files/upload', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-                },
+                headers,
                 body: formData
             });
             
@@ -1076,8 +1291,29 @@ function uploadFile() {
     fileInput.click();
 }
 
-function downloadFile(fileId) {
-    window.open(`/api/files/download/${fileId}`, '_blank');
+async function downloadFile(fileId, fileName) {
+    try {
+        let headers = {};
+        if (typeof authUtils !== 'undefined' && authUtils.getAuthHeader) {
+            headers = authUtils.getAuthHeader();
+        }
+        const res = await fetch(`/api/files/download/${fileId}`, { headers });
+        if (!res.ok) throw new Error('Lỗi tải file');
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName || 'file';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        }, 1000);
+    } catch (error) {
+        console.error('❌ Error downloading file:', error);
+        if (typeof showNotification === 'function') showNotification('Lỗi khi tải xuống file', 'error');
+    }
 }
 
 // Delete file function

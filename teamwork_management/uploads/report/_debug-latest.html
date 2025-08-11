@@ -2,87 +2,74 @@
  <head>
   <meta charset="UTF-8" />
   <style>
-   body { font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif; font-size: 12px; color:#333; } h1 { margin: 0 0 8px 0; } .meta { margin: 4px 0 12px; } .meta .line { margin: 2px 0; } table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ccc; padding: 6px 8px; } thead th { background: #f5f5f5; } .highlight { font-weight: bold; background: #dff0d8; } .low-score { color: red; } .section-title { margin: 14px 0 6px; font-weight: bold; } .inner-table th, .inner-table td { font-size: 11px; }
+   body { font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif; font-size: 12px; color: #333; } h1 { margin: 0 0 8px 0; } .meta { margin: 4px 0 12px; } table { width: 100%; border-collapse: collapse; margin-top: 8px; } th, td { border: 1px solid #999; padding: 6px; text-align: center; } th { background: #efefef; } .highlight { font-weight: bold; background: #dff0d8; } .low-score { color: red; }
   </style>
  </head>
  <body>
   <h1>
-   Báo cáo thành viên dự án
+   Báo cáo đánh giá thành viên dự án
   </h1>
   <div class="meta">
-   <div class="line">
+   <div>
     <b>
-     Project:
+     Dự án:
     </b>
     <span>
      Project test report
-    </span> &#xa0;|&#xa0; 
-    <b>
-     Status:
-    </b>
-    <span></span>
+    </span>
    </div>
-   <div class="line">
+   <div>
     <b>
-     Thời gian:
+     Thời gian báo cáo:
     </b>
     <span>
      2025-08-01
     </span> - 
     <span>
-     2025-08-15
-    </span> &#xa0;|&#xa0; 
-    <b>
-     Generated At:
-    </b>
-    <span>
-     2025-08-11T18:14:58.636308900+07:00[Asia/Bangkok]
+     2025-08-11
     </span>
    </div>
-   <div class="line">
+   <div>
     <b>
-     Thành viên:
+     Ngày tạo:
     </b>
     <span>
-     Do B
-    </span> (ID: 
-    <span>
-     15
-    </span>)
+     2025-08-11T18:55:08.198073991+07:00[Asia/Bangkok]
+    </span>
    </div>
-  </div> <!-- Bảng chỉ số (Excel lấy bảng này) -->
-  <table id="report-table">
+  </div>
+  <table id="member-table">
    <thead>
     <tr>
      <th>
-      #
+      Rank
      </th>
      <th>
-      Thành viên
+      Member
      </th>
      <th>
-      Assigned
+      Assigned Tasks count
      </th>
      <th>
-      On time
+      Completed Tasks count
      </th>
      <th>
-      Late
+      Overdue Tasks count
      </th>
      <th>
-      Self-created
+      Created Tasks count
      </th>
      <th>
-      Submissions
+      Submissions count
      </th>
      <th>
-      Approvals
+      Approved
      </th>
      <th>
-      Rejects
+      Rejected
      </th>
      <th>
-      Score
+      Total point
      </th>
     </tr>
    </thead>
@@ -92,10 +79,42 @@
       1
      </td>
      <td>
-      Do B
+      Le A
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
      </td>
      <td>
       3
+     </td>
+     <td>
+      2
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td class="low-score">
+      20
+     </td>
+    </tr>
+    <tr>
+     <td>
+      2
+     </td>
+     <td>
+      Dao D
+     </td>
+     <td>
+      1
      </td>
      <td>
       0
@@ -119,93 +138,100 @@
       0
      </td>
     </tr>
-   </tbody>
-  </table> <!-- Danh sách task của member -->
-  <div class="section-title">
-   Danh sách task được assign
-  </div>
-  <table class="inner-table">
-   <thead>
-    <tr>
-     <th style="width:40px;">
-      #
-     </th>
-     <th style="width:70px;">
-      ID
-     </th>
-     <th>
-      Tiêu đề
-     </th>
-     <th style="width:110px;">
-      Deadline
-     </th>
-     <th style="width:120px;">
-      Status
-     </th>
-     <th style="width:120px;">
-      Priority
-     </th>
-    </tr>
-   </thead>
-   <tbody>
     <tr>
      <td>
       3
      </td>
      <td>
-      11
+      Do B
      </td>
-     <td>
-      Task 2.1.1
-     </td>
-     <td>
-      09/08/2025
-     </td>
-     <td>
-      OVERDUE
-     </td>
-     <td>
-      2
-     </td>
-    </tr>
-    <tr>
      <td>
       1
      </td>
      <td>
-      7
+      0
      </td>
      <td>
-      Task 2
+      1
      </td>
      <td>
-      15/08/2025
+      0
      </td>
      <td>
-      NOT_STARTED
+      0
      </td>
      <td>
-      3
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td class="low-score">
+      0
      </td>
     </tr>
     <tr>
      <td>
-      2
+      4
      </td>
      <td>
-      9
+      Lai E
      </td>
      <td>
-      Task 2.1
+      0
      </td>
      <td>
-      15/08/2025
+      0
      </td>
      <td>
-      NOT_STARTED
+      0
      </td>
      <td>
-      3
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td class="low-score">
+      0
+     </td>
+    </tr>
+    <tr>
+     <td>
+      5
+     </td>
+     <td>
+      Nguyen C
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      1
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td>
+      0
+     </td>
+     <td class="low-score">
+      0
      </td>
     </tr>
    </tbody>

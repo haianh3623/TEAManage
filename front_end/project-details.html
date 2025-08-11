@@ -253,13 +253,58 @@
                                 <button class="btn btn-outline-primary" onclick="editProject()">
                                     <i class="bi bi-pencil me-2"></i>Chỉnh sửa dự án
                                 </button>
-                                <button class="btn btn-outline-success" id="exportReportBtn" type="button">
-                                    <i class="bi bi-file-earmark-arrow-down me-2"></i>Xuất báo cáo dự án
+                                <button class="btn btn-outline-success me-2" id="exportProjectReportBtn" type="button">
+                                    <i class="bi bi-file-earmark-arrow-down me-2"></i>Báo cáo dự án
                                 </button>
-                                <div id="exportReportOptions" class="dropdown-menu" style="min-width:180px;">
-                                    <button class="dropdown-item" id="exportPdfBtn" type="button"><i class="bi bi-file-earmark-pdf me-2 text-danger"></i>Xuất PDF</button>
-                                    <button class="dropdown-item" id="exportExcelBtn" type="button"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Xuất Excel</button>
+                                <button class="btn btn-outline-info" id="exportMemberReportBtn" type="button">
+                                    <i class="bi bi-person-lines-fill me-2"></i>Báo cáo thành viên
+                                </button>
+        <!-- Modal Báo cáo thành viên -->
+        <div class="modal fade" id="memberReportModal" tabindex="-1" aria-labelledby="memberReportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="memberReportModalLabel">Báo cáo thành viên dự án</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="memberReportForm">
+                            <div class="mb-3">
+                                <label for="memberReportFromDate" class="form-label">Ngày bắt đầu</label>
+                                <input type="date" class="form-control" id="memberReportFromDate" name="fromDate">
+                            </div>
+                            <div class="mb-3">
+                                <label for="memberReportToDate" class="form-label">Ngày kết thúc</label>
+                                <input type="date" class="form-control" id="memberReportToDate" name="toDate">
+                            </div>
+                            <div class="mb-3">
+                                <label for="memberReportMemberId" class="form-label">Thành viên (không bắt buộc)</label>
+                                <select class="form-select" id="memberReportMemberId" name="memberId">
+                                    <option value="">-- Tất cả thành viên --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Định dạng</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="format" id="memberReportFormatPdf" value="pdf" checked>
+                                        <label class="form-check-label" for="memberReportFormatPdf">PDF</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="format" id="memberReportFormatExcel" value="excel">
+                                        <label class="form-check-label" for="memberReportFormatExcel">Excel</label>
+                                    </div>
                                 </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="memberReportDownloadBtn">Tải báo cáo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
                             </div>
                         </div>
                         
@@ -375,109 +420,7 @@
     <script src="/js/project-details.js"></script>
     <script src="/js/add-members-modal.js"></script>
     
-    <script>
-    // --- Export Project Report Logic ---
-    const exportBtn = document.getElementById('exportReportBtn');
-    const exportOptions = document.getElementById('exportReportOptions');
-    const exportPdfBtn = document.getElementById('exportPdfBtn');
-    const exportExcelBtn = document.getElementById('exportExcelBtn');
-
-    // Hiện menu chọn loại file khi bấm nút xuất
-    exportBtn.addEventListener('click', function(e) {
-        exportOptions.classList.toggle('show');
-        const rect = exportBtn.getBoundingClientRect();
-        exportOptions.style.position = 'absolute';
-        exportOptions.style.left = rect.left + 'px';
-        exportOptions.style.top = (rect.bottom + window.scrollY) + 'px';
-    });
-    // Ẩn menu khi click ngoài
-    document.addEventListener('click', function(e) {
-        if (!exportBtn.contains(e.target) && !exportOptions.contains(e.target)) {
-            exportOptions.classList.remove('show');
-        }
-    });
-
-    function getProjectIdFromUrl() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('id');
-    }
-
-    async function exportProjectReport(type) {
-        const projectId = getProjectIdFromUrl();
-        if (!projectId) return;
-        const baseApi = "http://localhost:8080"; // Hoặc lấy từ biến toàn cục nếu có
-        let genUrl = '', fileType = '';
-        if (type === 'pdf') {
-            genUrl = `${baseApi}/api/reports/projects/${projectId}/pdf`;
-            fileType = 'pdf';
-        } else {
-            genUrl = `${baseApi}/api/reports/projects/${projectId}/excel`;
-            fileType = 'excel';
-        }
-        // Lấy headers (Authorization nếu có)
-        let headers = {};
-        if (typeof authUtils !== 'undefined' && authUtils.isAuthenticated()) {
-            headers = authUtils.getAuthHeader();
-        }
-        try {
-            // Gửi request tạo file
-            const res = await fetch(genUrl, { method: 'POST', headers });
-            if (!res.ok) {
-                const errText = await res.text();
-                throw new Error('Lỗi tạo file: ' + errText);
-            }
-            const data = await res.json();
-            if (!data.path) throw new Error('Không nhận được đường dẫn file');
-            // Gửi request tải file
-            let downloadEndpoint = fileType === 'pdf' ? `${baseApi}/api/reports/download/pdf` : `${baseApi}/api/reports/download`;
-            const downloadRes = await fetch(`${downloadEndpoint}?path=${encodeURIComponent(data.path)}`, { headers });
-            if (!downloadRes.ok) {
-                const errText = await downloadRes.text();
-                throw new Error('Lỗi tải file: ' + errText);
-            }
-            const blob = await downloadRes.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileType === 'pdf' ? 'report.pdf' : 'report.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                window.URL.revokeObjectURL(url);
-                a.remove();
-            }, 1000);
-        } catch (err) {
-            alert('Lỗi xuất báo cáo: ' + (err.message || err));
-        }
-    }
-
-    exportPdfBtn.addEventListener('click', function() {
-        exportOptions.classList.remove('show');
-        exportProjectReport('pdf');
-    });
-    exportExcelBtn.addEventListener('click', function() {
-        exportOptions.classList.remove('show');
-        exportProjectReport('excel');
-    });
-        // Debug: Track page load events
-        console.log('🏁 PAGE LOAD: project-details.html loaded at', new Date().toISOString());
-        
-        // Track when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📋 DOM READY: project-details.html DOM ready at', new Date().toISOString());
-        });
-        
-        // Track beforeunload to detect page refresh/navigation
-        window.addEventListener('beforeunload', function(event) {
-            console.log('🔄 BEFORE UNLOAD: Page is about to unload/refresh at', new Date().toISOString());
-            console.log('🔄 BEFORE UNLOAD: Current URL:', window.location.href);
-        });
-        
-        // Track page visibility changes
-        document.addEventListener('visibilitychange', function() {
-            console.log('👁️ VISIBILITY CHANGE: Page visibility changed to', document.visibilityState);
-        });
-    </script>
+    <!-- Đã chuyển logic xuất báo cáo sang project-details.js -->
     <script>
         // Nút chuyển sang trang tạo nhiệm vụ, truyền projectId
         function createTask() {

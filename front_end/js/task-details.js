@@ -454,8 +454,8 @@ document.getElementById('submitTaskModalBtn').addEventListener('click', async fu
             }
             const response = await fetch('http://localhost:8080/api/files/upload', {
                 method: 'POST',
-                body: formData,
-                headers: headers
+                headers,
+                body: formData
             });
             if (!response.ok) {
                 const errorText = await response.text();
@@ -2211,7 +2211,23 @@ async function confirmUpload() {
 
 async function downloadFile(fileId, fileName) {
     try {
-        window.open(`/api/files/${fileId}/download`, '_blank');
+        let headers = {};
+        if (typeof authUtils !== 'undefined' && authUtils.getAuthHeader) {
+            headers = authUtils.getAuthHeader();
+        }
+        const res = await fetch(`/api/files/download/${fileId}`, { headers });
+        if (!res.ok) throw new Error('Lỗi tải file');
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName || 'file';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        }, 1000);
     } catch (error) {
         console.error('❌ Error downloading file:', error);
         showNotification('Lỗi khi tải xuống file', 'error');

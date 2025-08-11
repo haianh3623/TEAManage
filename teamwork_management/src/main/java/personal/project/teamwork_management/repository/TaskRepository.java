@@ -181,4 +181,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
                             @Param("userId") Long userId,
                             @Param("from") Date from,
                             @Param("to") Date to);
+
 }

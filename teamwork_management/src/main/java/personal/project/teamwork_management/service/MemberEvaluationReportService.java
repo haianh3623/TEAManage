@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import personal.project.teamwork_management.dto.TaskDto;
 import personal.project.teamwork_management.model.ProjectMember;
 import personal.project.teamwork_management.model.Status;
 import personal.project.teamwork_management.model.Task;
 import personal.project.teamwork_management.model.User;
 import personal.project.teamwork_management.dto.ProjectDto;
 import personal.project.teamwork_management.repository.ProjectMemberRepository;
+import personal.project.teamwork_management.repository.TaskRepository;
 
 import java.nio.file.*;
 import java.time.*;
@@ -32,6 +34,7 @@ public class MemberEvaluationReportService {
     private final HtmlToExcelService htmlToExcelService;  // đã có
 
     private final ProjectMemberRepository projectMemberRepository;
+    private final TaskRepository taskRepository;          // nếu cần tái sử dụng
 
     private static final ZoneId ZONE = ZoneId.of("Asia/Bangkok");
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
@@ -148,10 +151,14 @@ public class MemberEvaluationReportService {
         Map<String, Object> model = new HashMap<>();
         model.put("projectId", project.getId());
         model.put("projectName", project.getName());
-        model.put("from", from.toString());
-        model.put("to", to.toString());
+
+        // đổi "from" -> "fromDate", "to" -> "toDate"
+        model.put("fromDate", from.toString());
+        model.put("toDate",  to.toString());
+
         model.put("generatedAt", ZonedDateTime.now(ZONE).toString());
-        model.put("items", ranked); // dùng trong template
+        model.put("items", ranked);
+
         return model;
     }
 
@@ -222,9 +229,17 @@ public class MemberEvaluationReportService {
     protected List<Task> fetchTasksWithAssignees(Long projectId, Date from, Date to) {
         // TODO: thay bằng taskRepository.findByProjectIdAndDeadlineBetween(...) có @EntityGraph("assignedUsers")
         // Tạm thời dùng TaskService + lọc (nhưng cẩn thận Lazy nếu assignedUsers là LAZY):
-        List<personal.project.teamwork_management.dto.TaskDto> dtos =
-                taskService.getAllTasksByProjectId(projectId);
+        List<TaskDto> dtos = taskService.getAllTasksByProjectId(projectId);
         List<Task> stub = new ArrayList<>(); // Chỉ minh hoạ, bạn hãy dùng repository thật để lấy entity
+
+        for (TaskDto dto : dtos) {
+            if (dto.getDeadline() != null && !dto.getDeadline().before(from) && !dto.getDeadline().after(to)) {
+                Task task = taskRepository.findById(dto.getId()).orElseThrow(); // Chuyển đổi từ DTO sang entity nếu cần
+
+                stub.add(task);
+            }
+        }
+
         // => Khuyến nghị: viết một query EntityGraph để trả về List<Task> đã fetch assignedUsers.
         return stub;
     }
@@ -250,5 +265,12 @@ public class MemberEvaluationReportService {
 
         private long score;        // 0..100 (rounded)
         private int rank;
+
+        // --- ALIAS GETTERS cho Thymeleaf template ---
+        public long getAssignedTasks()      { return assigned; }
+        public long getOnTimeTasks()        { return onTime; }
+        public long getLateTasks()          { return late; }
+        public long getSelfCreatedTasks()   { return selfCreated; }
+        public long getTotalScore()         { return score; }
     }
 }

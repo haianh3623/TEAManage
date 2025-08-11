@@ -21,7 +21,7 @@ spring:
                 user-name-attribute: sub
 
   datasource:
-    url: jdbc:mysql://localhost:3306/teamwork_management?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3307/teamwork_management?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver

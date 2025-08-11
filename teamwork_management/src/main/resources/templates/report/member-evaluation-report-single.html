@@ -1,0 +1,103 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif; font-size: 12px; color:#333; }
+        h1 { margin: 0 0 8px 0; }
+        .meta { margin: 4px 0 12px; }
+        .meta .line { margin: 2px 0; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 6px 8px; }
+        thead th { background: #f5f5f5; }
+        .highlight { font-weight: bold; background: #dff0d8; }
+        .low-score { color: red; }
+        .section-title { margin: 14px 0 6px; font-weight: bold; }
+        .inner-table th, .inner-table td { font-size: 11px; }
+    </style>
+</head>
+<body>
+<h1>Báo cáo thành viên dự án</h1>
+
+<div class="meta">
+    <div class="line">
+        <b>Project:</b> <span th:text="${projectName}">Tên dự án</span>
+        &nbsp;|&nbsp;
+        <b>Status:</b> <span th:text="${status}">ACTIVE</span>
+    </div>
+    <div class="line">
+        <b>Thời gian:</b>
+        <span th:text="${fromDate}">2025-08-01</span>
+        -
+        <span th:text="${toDate}">2025-08-10</span>
+        &nbsp;|&nbsp;
+        <b>Generated At:</b> <span th:text="${generatedAt}">2025-08-10T10:20:30</span>
+    </div>
+    <div class="line">
+        <b>Thành viên:</b> <span th:text="${memberName}">Nguyễn Văn A</span> (ID: <span th:text="${memberId}">1</span>)
+    </div>
+</div>
+
+<!-- Bảng chỉ số (Excel lấy bảng này) -->
+<table id="report-table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Thành viên</th>
+        <th>Assigned</th>
+        <th>On time</th>
+        <th>Late</th>
+        <th>Self-created</th>
+        <th>Submissions</th>
+        <th>Approvals</th>
+        <th>Rejects</th>
+        <th>Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row, idx : ${items}">
+        <td th:text="${idx.index + 1}">1</td>
+        <td th:text="${row.memberName}">Nguyễn Văn A</td>
+        <td th:text="${row.assignedTasks}">10</td>
+        <td th:text="${row.onTimeTasks}">8</td>
+        <td th:text="${row.lateTasks}">2</td>
+        <td th:text="${row.selfCreatedTasks}">1</td>
+        <td th:text="${row.submissions}">5</td>
+        <td th:text="${row.approvals}">4</td>
+        <td th:text="${row.rejects}">1</td>
+        <td th:text="${row.totalScore}"
+            th:class="${row.totalScore < 50} ? 'low-score' : 'highlight'">85</td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Danh sách task của member -->
+<div class="section-title">Danh sách task được assign</div>
+<table class="inner-table">
+    <thead>
+    <tr>
+        <th style="width:40px;">#</th>
+        <th style="width:70px;">ID</th>
+        <th>Tiêu đề</th>
+        <th style="width:110px;">Deadline</th>
+        <th style="width:120px;">Status</th>
+        <th style="width:120px;">Priority</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(memberTasks)}">
+        <td colspan="6" style="text-align:center;color:#888;">Không có task trong khoảng thời gian</td>
+    </tr>
+    <tr th:each="t : ${memberTasks}">
+        <td th:text="${t.no}">1</td>
+        <td th:text="${t.id}">123</td>
+        <td th:text="${t.title}">Task ABC</td>
+        <td th:text="${t.deadline}">10/08/2025</td>
+        <td th:text="${t.status}">IN_PROGRESS</td>
+        <td th:text="${t.priority}">HIGH</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

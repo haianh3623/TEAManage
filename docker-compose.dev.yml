@@ -1,0 +1,78 @@
+services:
+  # MySQL Database for Development
+  mysql:
+    image: mysql:8.0
+    container_name: tea-manage-mysql-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: teamwork_management_dev
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - tea-manage-dev-network
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "devuser", "-p1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Spring Boot Backend for Development
+  backend:
+    build:
+      context: ./teamwork_management
+      dockerfile: Dockerfile
+    container_name: tea-manage-backend-dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Database connection
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/teamwork_management_dev?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: devuser
+      SPRING_DATASOURCE_PASSWORD: 1234
+      
+      # Development settings
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: DEBUG
+      
+      # JWT Configuration
+      JWT_SECRET: dev-secret-key-for-development-only
+      JWT_EXPIRATION: 7200
+      
+      # File upload configuration
+      SPRING_FILE_UPLOAD_DIR: /app/uploads
+      SPRING_FILE_MAX_FILE_SIZE: 50MB
+      SPRING_FILE_MAX_REQUEST_SIZE: 50MB
+      
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    volumes:
+      - ./teamwork_management/uploads:/app/uploads
+      - ./teamwork_management/logs:/app/logs
+    networks:
+      - tea-manage-dev-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  tea-manage-dev-network:
+    driver: bridge
+
+volumes:
+  mysql_dev_data:

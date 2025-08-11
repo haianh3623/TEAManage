@@ -1,0 +1,115 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: tea-manage-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: teamwork_management
+      MYSQL_USER: teamuser
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - tea-manage-network
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "teamuser", "-p1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./teamwork_management
+      dockerfile: Dockerfile
+    container_name: tea-manage-backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Database connection
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/teamwork_management?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: teamuser
+      SPRING_DATASOURCE_PASSWORD: 1234
+      
+      # JWT Configuration
+      JWT_SECRET: 263480134625fe78955ba600bd2ef5b9
+      JWT_EXPIRATION: 3600
+      
+      # JPA Configuration
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      
+      # File upload configuration
+      SPRING_FILE_UPLOAD_DIR: /app/uploads
+      SPRING_FILE_MAX_FILE_SIZE: 10MB
+      SPRING_FILE_MAX_REQUEST_SIZE: 10MB
+      
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./teamwork_management/uploads:/app/uploads
+      - ./teamwork_management/logs:/app/logs
+    networks:
+      - tea-manage-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/hello", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  nginx:
+    image: nginx:alpine
+    container_name: tea-manage-nginx
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # Optionally serve FE static build if present (e.g., ./frontend/dist or ./frontend/build)
+      - ./front_end:/usr/share/nginx/html:ro     
+    networks:
+      - tea-manage-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # Optional: run a separate FE container when profile 'frontend' is enabled.
+  # If you only need static files, you can skip this and just mount ./frontend/dist to nginx above.
+  frontend:
+    profiles: ["frontend"]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tea-manage-frontend
+    expose:
+      - "3000"
+    networks:
+      - tea-manage-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+
+networks:
+  tea-manage-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

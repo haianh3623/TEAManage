@@ -170,5 +170,3 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --buil
 curl -I http://localhost/
 curl -I http://localhost/api/actuator/health
 ```
-
-Nếu cần mình xuất kèm **bộ file mẫu** `docker-compose.override.yml` và `nginx.conf` đã khớp với `front_end/` của bạn, nói mình biết — mình đính kèm luôn.

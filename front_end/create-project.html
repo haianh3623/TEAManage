@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo dự án mới - TEAManage</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/create-project.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+        <div class="navbar-content">
+            <div class="d-flex align-items-center gap-3">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <a href="index.html" class="navbar-brand">
+                    <img src="images/team-logo.svg" alt="TEAManage Logo" class="logo-image">
+                    TEAManage
+                </a>
+            </div>
+            
+            <!-- Right side buttons -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Notification Button -->
+                <div class="nav-item dropdown">
+                    <button class="nav-btn dropdown-toggle" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationDropdown">
+                        <li><h6 class="dropdown-header">Thông báo</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li id="notificationList">
+                            <div class="dropdown-item-text text-muted text-center py-3">
+                                Không có thông báo mới
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-center" href="#" onclick="markAllAsRead()">Đánh dấu tất cả đã đọc</a></li>
+                    </ul>
+                </div>
+
+                <!-- User Profile Button -->
+                <div class="nav-item dropdown">
+                    <button class="nav-btn dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><h6 class="dropdown-header" id="userDisplayName">Người dùng</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="profile.html">
+                            <i class="bi bi-person me-2"></i>Hồ sơ cá nhân
+                        </a></li>
+                        <li><a class="dropdown-item" href="profile.html">
+                            <i class="bi bi-gear me-2"></i>Cài đặt
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()">
+                            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="create-project-card">
+            <!-- Header -->
+            <div class="card-header">
+                <h2><i class="bi bi-folder-plus me-3"></i>Tạo dự án mới</h2>
+                <p>Khởi tạo dự án và bắt đầu quản lý công việc hiệu quả</p>
+            </div>
+
+            <!-- Form Content -->
+            <div class="card-body" id="formContent">
+                <form id="createProjectForm" enctype="multipart/form-data">
+                    <!-- Project Basic Information -->
+                    <div class="form-section">
+                        <h5><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
+                        
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <label for="projectName" class="form-label">
+                                    Tên dự án <span class="text-required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="projectName" name="name" required 
+                                       placeholder="Nhập tên dự án của bạn..." maxlength="255">
+                                <div class="invalid-feedback">Vui lòng nhập tên dự án</div>
+                            </div>
+
+                            <div class="col-12 mb-4">
+                                <label for="projectDescription" class="form-label">
+                                    Mô tả dự án
+                                </label>
+                                <textarea class="form-control" id="projectDescription" name="description" 
+                                          placeholder="Mô tả chi tiết về mục tiêu, phạm vi và yêu cầu của dự án..." 
+                                          maxlength="1000"></textarea>
+                                <small class="text-muted">Tối đa 1000 ký tự</small>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="startDate" class="form-label">
+                                    Ngày bắt đầu <span class="text-required">*</span>
+                                </label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                <div class="invalid-feedback">Vui lòng chọn ngày bắt đầu</div>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="endDate" class="form-label">
+                                    Ngày kết thúc <span class="text-required">*</span>
+                                </label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                <div class="invalid-feedback">Vui lòng chọn ngày kết thúc</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Upload Section -->
+                    <div class="form-section">
+                        <h5><i class="bi bi-paperclip me-2"></i>Tài liệu dự án</h5>
+                        
+                        <div class="file-upload-section">
+                            <div class="project-file-preview" id="filePreview" onclick="openFileDialog()">
+                                <i class="bi bi-file-earmark-plus upload-icon"></i>
+                                <p class="upload-text">Nhấn để chọn tài liệu liên quan đến dự án</p>
+                                <small class="text-muted">Có thể chọn nhiều file cùng lúc</small>
+                                <div class="file-list" id="fileList"></div>
+                            </div>
+                            <input type="file" class="d-none" id="projectFiles" name="projectFiles" multiple 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar">
+                            <div class="file-upload-help">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Định dạng hỗ trợ: PDF, Word, Excel, PowerPoint, TXT, ZIP, RAR (tối đa 10MB mỗi file)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="btn-group-custom">
+                        <button type="button" class="btn btn-custom btn-secondary-custom" onclick="goBack()">
+                            <i class="bi bi-x-circle me-2"></i>Hủy
+                        </button>
+                        <button type="submit" class="btn btn-custom btn-primary-custom" id="createBtn">
+                            <span id="btnText">
+                                <i class="bi bi-plus-circle me-2"></i>Tạo dự án
+                            </span>
+                            <span class="loading-spinner" id="loadingSpinner">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                Đang tạo...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <div class="success-content">
+                    <i class="bi bi-check-circle success-icon"></i>
+                    <h3>Tạo dự án thành công!</h3>
+                    <p class="text-muted">Đang chuyển hướng đến trang chi tiết dự án...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Utility Scripts -->
+    <script src="/utils/auth-utils.js"></script>
+    <script src="/utils/api-client.js"></script>
+    <script src="/utils/validation.js"></script>
+    <script src="/utils/ui-utils.js"></script>
+    
+    <!-- Page Scripts -->
+    <script src="/js/create-project.js"></script>
+</body>
+</html>

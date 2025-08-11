@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin thành viên dự án</title>
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/project-details.css">
+    <link rel="stylesheet" href="/css/notifications.css">
+    <style>
+        .member-info-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .member-avatar {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: bold;
+            color: #495057;
+            margin-right: 1.5rem;
+        }
+        .activity-filter {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (copy from project-details) -->
+    <!-- Top Navbar (giống project-details) -->
+    <nav class="top-navbar">
+        <div class="navbar-content">
+            <div class="d-flex align-items-center gap-3">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <a href="index.html" class="navbar-brand">
+                    <img src="images/team-logo.svg" alt="TEAManage Logo" class="logo-image">
+                    TEAManage
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="dropdown">
+                    <button class="navbar-btn notification-badge" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-count" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end notification-dropdown">
+                        <div class="notification-header">
+                            <h6 class="mb-0">Thông báo</h6>
+                            <button class="btn btn-sm btn-link mark-all-read-btn" type="button">
+                                Đánh dấu đã đọc
+                            </button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="loading-notifications">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                <span class="ms-2">Đang tải...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="icon-btn" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="user-name" id="userDisplayName">User</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <div class="dropdown-header">
+                            <strong id="userDisplayNameDropdown">User Name</strong>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="profile.html">
+                            <i class="bi bi-person me-2"></i>Hồ sơ
+                        </a>
+                        <a class="dropdown-item" href="profile.html">
+                            <i class="bi bi-gear me-2"></i>Cài đặt
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="#" onclick="logout()">
+                            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+                <div class="container-fluid">
+                        <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                        <!-- Member Info Card -->
+                                        <div class="member-info-card d-flex align-items-center mb-4">
+                                                <div class="member-avatar" id="memberAvatar">?</div>
+                                                <div>
+                                                        <h4 id="memberFullName">Họ tên</h4>
+                                                        <div class="mb-1"><span class="fw-semibold">Email:</span> <span id="memberEmail"></span></div>
+                                                        <div class="mb-1"><span class="fw-semibold">Số điện thoại:</span> <span id="memberPhone"></span></div>
+                                                        <div class="mb-1"><span class="fw-semibold">Ngày sinh:</span> <span id="memberDob"></span></div>
+                                                        <div class="mb-1"><span class="fw-semibold">Vai trò:</span> <span id="memberRole"></span></div>
+                                                </div>
+                                        </div>
+                                        <!-- Tabs for Nhiệm vụ & Hoạt động -->
+                                        <ul class="nav nav-tabs mb-3" id="projectMemberTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="memberTasksTabBtn" data-bs-toggle="tab" data-bs-target="#memberTasksTabContent" type="button" role="tab">Nhiệm vụ</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="activityTabBtn" data-bs-toggle="tab" data-bs-target="#activityTabContent" type="button" role="tab">Hoạt động</button>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="projectMemberTabContent">
+                                            <div class="tab-pane fade show active" id="memberTasksTabContent" role="tabpanel">
+                                                <!-- Danh sách nhiệm vụ sẽ render ở đây bằng JS -->
+                                            </div>
+                                            <div class="tab-pane fade" id="activityTabContent" role="tabpanel">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h4 class="mb-0">Hoạt động của thành viên</h4>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                                <label for="activityTimeFilter" class="form-label mb-0">Lọc:</label>
+                                                                <select id="activityTimeFilter" class="form-select form-select-sm w-auto">
+                                                                        <option value="1d">1 ngày</option>
+                                                                        <option value="1w">1 tuần</option>
+                                                                        <option value="1m">1 tháng</option>
+                                                                        <option value="all">Tất cả</option>
+                                                                </select>
+                                                        </div>
+                                                </div>
+                                                <div class="activity-list" id="activityList">
+                                                        <div class="text-center py-4">
+                                                                <div class="spinner-border text-primary" role="status">
+                                                                        <span class="visually-hidden">Đang tải...</span>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/utils/auth-utils.js"></script>
+    <script src="/utils/api-client.js"></script>
+    <script src="/js/notifications.js"></script>
+    <script src="/js/project-member.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

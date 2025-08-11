@@ -1,0 +1,835 @@
+/* Profile Page Styles - Compact Design */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+/* Navbar Styles - Match other pages */
+.top-navbar {
+    background: #764BA2 !important;
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    padding: 0;
+}
+
+.navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 20px;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.navbar-brand .logo-image {
+    height: 28px;
+    width: 28px;
+    margin-right: 10px;
+    filter: brightness(0) invert(1);
+}
+
+/* Navbar Right Side Buttons */
+.icon-btn, .back-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon-btn:hover, .back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.icon-btn:focus, .back-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.user-name {
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    background: #dc3545;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    min-width: 200px;
+}
+
+.notification-dropdown {
+    width: 350px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Main Content */
+.main-content {
+    padding-top: 80px; /* Account for fixed navbar */
+    padding-bottom: 2rem;
+    background: #f8f9fa;
+    min-height: calc(100vh - 60px);
+}
+
+/* Profile Header - Compact Style like project/task details */
+.profile-header {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-title-section {
+    margin-bottom: 1rem;
+}
+
+.profile-avatar-compact {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+}
+
+.profile-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.profile-subtitle {
+    color: #6c757d;
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Profile Tabs - Compact */
+.profile-tabs-container {
+    background: white;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.profile-nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    padding: 0 1.5rem;
+    margin-bottom: 0;
+}
+
+.profile-nav-tabs .nav-link {
+    border: none;
+    border-radius: 0;
+    padding: 1rem 1.5rem;
+    color: #6c757d !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: transparent !important;
+}
+
+.profile-nav-tabs .nav-link * {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: inherit !important;
+}
+
+.profile-nav-tabs .nav-link:hover {
+    color: #667eea !important;
+    background: rgba(102, 126, 234, 0.1) !important;
+}
+
+.profile-nav-tabs .nav-link:hover * {
+    color: #667eea !important;
+}
+
+.profile-nav-tabs .nav-link.active {
+    color: #667eea !important;
+    background: transparent !important;
+    border-bottom: 2px solid #667eea;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-weight: 600;
+}
+
+.profile-nav-tabs .nav-link.active * {
+    color: #667eea !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Tab Content */
+.profile-tab-content {
+    background: white;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-card {
+    border: none;
+    border-radius: 0;
+}
+
+.profile-card .card-header {
+    background: none;
+    border-bottom: 1px solid #dee2e6;
+    padding: 1.5rem;
+}
+
+.profile-card .card-body {
+    padding: 1.5rem;
+}
+
+/* Form Styles - Compact */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: #dc3545;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-control:readonly {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.invalid-feedback {
+    display: block;
+    font-size: 0.875rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+    opacity: 1 !important; /* Ensure form actions are always visible */
+}
+
+.form-actions .btn {
+    opacity: 1 !important; /* Ensure all buttons in form actions are visible */
+    color: inherit !important;
+}
+
+.form-actions .btn * {
+    opacity: 1 !important; /* Ensure all child elements are visible */
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    opacity: 1 !important; /* Ensure button is always visible */
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white !important; /* Ensure text is always visible */
+    opacity: 1 !important; /* Always visible */
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    opacity: 1 !important; /* Maintain visibility on hover */
+}
+
+.btn-primary i {
+    opacity: 1 !important; /* Ensure icon is visible */
+}
+
+/* Button fixes to ensure proper visibility */
+button.btn {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: inherit !important;
+}
+
+button.btn * {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Specific fixes for form buttons */
+.tab-pane .btn,
+.profile-card .btn,
+form .btn {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.tab-pane .btn *,
+.profile-card .btn *,
+form .btn * {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Bootstrap icon fixes */
+.bi {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Additional tab fixes - override Bootstrap defaults */
+.nav-tabs .nav-link,
+.profile-nav-tabs .nav-link,
+ul.nav-tabs li button {
+    color: #6c757d !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.nav-tabs .nav-link.active,
+.profile-nav-tabs .nav-link.active,
+ul.nav-tabs li button.active {
+    color: #667eea !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Force all text and icons in tabs to be visible */
+.nav-tabs .nav-link *,
+.profile-nav-tabs .nav-link *,
+ul.nav-tabs li button * {
+    color: inherit !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .profile-header {
+        padding: 1rem;
+    }
+    
+    .profile-card .card-header,
+    .profile-card .card-body {
+        padding: 1rem;
+    }
+    
+    .profile-nav-tabs {
+        padding: 0 1rem;
+    }
+    
+    .profile-nav-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+/* Main Content */
+.main-content {
+    min-height: calc(100vh - 80px);
+    background-color: var(--light-bg);
+    padding: 2rem 0;
+}
+
+/* Profile Header */
+.profile-header {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.profile-avatar-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #667eea;
+    color: #667eea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.avatar-edit-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.1);
+}
+
+.profile-info {
+    margin-left: 1rem;
+}
+
+.profile-name {
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+}
+
+.profile-email {
+    color: var(--text-muted);
+    margin: 0.25rem 0;
+}
+
+.profile-join-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Profile Tabs */
+.profile-tabs-container {
+    margin-bottom: 2rem;
+}
+
+.profile-nav-tabs {
+    border: none;
+    background: white;
+    border-radius: 15px;
+    padding: 0.5rem;
+    box-shadow: var(--shadow);
+}
+
+.profile-nav-tabs .nav-link {
+    border: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.profile-nav-tabs .nav-link:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+}
+
+.profile-nav-tabs .nav-link.active {
+    background: var(--primary-gradient);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Profile Cards */
+.profile-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.profile-card .card-header {
+    background: var(--light-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+.profile-card .card-title {
+    color: #333;
+    font-weight: 600;
+}
+
+.profile-card .card-body {
+    padding: 2rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.form-label.required::after {
+    content: " *";
+    color: var(--danger-color);
+}
+
+.form-control,
+.form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+
+.form-control:invalid,
+.form-select:invalid {
+    border-color: var(--danger-color);
+}
+
+.form-control[readonly] {
+    background-color: #f8f9fa;
+    opacity: 0.8;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--danger-color);
+}
+
+/* Password Input */
+.password-input-group {
+    position: relative;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1rem;
+}
+
+.password-toggle-btn:hover {
+    color: #667eea;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    margin-top: 0.5rem;
+    height: 4px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength::after {
+    content: '';
+    display: block;
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength.weak::after {
+    width: 33%;
+    background-color: var(--danger-color);
+}
+
+.password-strength.medium::after {
+    width: 66%;
+    background-color: var(--warning-color);
+}
+
+.password-strength.strong::after {
+    width: 100%;
+    background-color: var(--success-color);
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+/* Avatar Modal */
+.avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: white;
+    margin: 0 auto 1rem;
+    overflow: hidden;
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-options {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Alert Styles */
+.alert {
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    color: #0c5460;
+    border-left: 4px solid var(--info-color);
+}
+
+/* Loading State */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem 0;
+    }
+    
+    .profile-header {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .profile-info {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+    
+    .profile-nav-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .profile-card .card-body {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}

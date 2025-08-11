@@ -1,0 +1,58 @@
+/* Common Logo Styles for TEAManage */
+
+.brand-logo,
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.logo-image {
+    height: 32px;
+    width: 32px;
+    margin-right: 12px;
+    filter: brightness(0) invert(1); /* Make SVG white for dark backgrounds */
+    transition: transform 0.3s ease;
+}
+
+.logo-image:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive logo sizes */
+@media (max-width: 768px) {
+    .logo-image {
+        height: 28px;
+        width: 28px;
+        margin-right: 10px;
+    }
+    
+    .brand-logo,
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-image {
+        height: 24px;
+        width: 24px;
+        margin-right: 8px;
+    }
+    
+    .brand-logo,
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+}
+
+/* Logo for light backgrounds */
+.logo-light .logo-image {
+    filter: none; /* Original colors */
+}
+
+/* Logo for dark backgrounds */
+.logo-dark .logo-image {
+    filter: brightness(0) invert(1); /* White color */
+}

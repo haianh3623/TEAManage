@@ -1,0 +1,115 @@
+/* File display styles */
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.file-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.file-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+}
+
+.file-icon {
+    font-size: 2rem;
+    margin-right: 12px;
+    color: #6c757d;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-info h6 {
+    margin: 0 0 4px 0;
+    font-weight: 600;
+    color: #333;
+}
+
+.file-info small {
+    color: #6c757d;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.file-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.file-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.file-actions .btn {
+    padding: 4px 8px;
+    line-height: 1;
+}
+
+.file-actions .btn i {
+    font-size: 0.875rem;
+}
+
+/* File type icons */
+.bi-file-earmark-pdf {
+    color: #dc3545;
+}
+
+.bi-file-earmark-word {
+    color: #0066cc;
+}
+
+.bi-file-earmark-excel {
+    color: #28a745;
+}
+
+.bi-file-earmark-ppt {
+    color: #ff6600;
+}
+
+.bi-file-earmark-zip {
+    color: #6f42c1;
+}
+
+.bi-file-earmark-text {
+    color: #6c757d;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h5 {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    margin: 0;
+    opacity: 0.8;
+}

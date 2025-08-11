@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo nhiệm vụ mới</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link href="/css/notifications.css" rel="stylesheet">
+    <link href="/css/create-project.css" rel="stylesheet">
+    <style>
+        .form-section { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 2rem; margin-bottom: 2rem; }
+        .form-label { font-weight: 500; }
+        .searchable-select { position: relative; }
+        .searchable-dropdown { position: absolute; z-index: 10; background: #fff; border: 1px solid #dee2e6; border-radius: 6px; width: 100%; max-height: 200px; overflow-y: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .searchable-dropdown .dropdown-item { cursor: pointer; }
+        .searchable-dropdown .dropdown-item.active, .searchable-dropdown .dropdown-item:hover { background: #f0f0f0; }
+        .chip { display: inline-block; background: #e9ecef; border-radius: 16px; padding: 2px 10px; margin: 2px 4px 2px 0; font-size: 0.95em; }
+        .chip .remove-chip { cursor: pointer; margin-left: 6px; color: #dc3545; }
+    </style>
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="navbar-content">
+            <div class="navbar-left">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <a href="index.html" class="navbar-brand">
+                    <img src="images/team-logo.svg" alt="TEAManage Logo" class="logo-image">
+                    TEAManage
+                </a>
+            </div>
+            <div class="navbar-right">
+                <div class="dropdown">
+                    <button class="navbar-btn notification-badge" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-count" style="display: none;">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end notification-dropdown">
+                        <div class="notification-header">
+                            <h6 class="mb-0">Thông báo</h6>
+                            <button class="btn btn-sm btn-link mark-all-read-btn" type="button">Đánh dấu đã đọc</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="loading-notifications">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                <span class="ms-2">Đang tải...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="navbar-btn" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i>
+                        <span id="userDisplayName" class="ms-2 d-none d-md-inline">User</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <div class="dropdown-header"><strong id="userDisplayNameDropdown">User Name</strong></div>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>Hồ sơ</a>
+                        <a class="dropdown-item" href="profile.html"><i class="bi bi-gear me-2"></i>Cài đặt</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form id="createTaskForm" class="form-section">
+                    <h2 class="mb-4">Tạo nhiệm vụ mới</h2>
+                    <div class="mb-3">
+                        <label for="projectSelect" class="form-label">Chọn dự án</label>
+                        <div class="searchable-select">
+                            <input type="text" class="form-control" id="projectSearchInput" placeholder="Tìm kiếm dự án..." required>
+                            <div class="searchable-dropdown d-none" id="projectDropdown"></div>
+                        </div>
+                    </div>
+                                <div class="mb-3">
+                                    <label for="taskFileInput" class="form-label">Đính kèm file (nếu có)</label>
+                                    <input type="file" class="form-control" id="taskFileInput" name="files" multiple>
+                                    <div class="form-text">Có thể chọn nhiều file, tổng dung lượng tối đa 10MB mỗi file.</div>
+                                </div>
+                    <div class="mb-3">
+                        <label for="titleInput" class="form-label">Tiêu đề</label>
+                        <input type="text" class="form-control" id="titleInput" required maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descriptionInput" class="form-label">Mô tả</label>
+                        <textarea class="form-control" id="descriptionInput" rows="3" maxlength="2000"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="priorityInput" class="form-label">Độ ưu tiên</label>
+                        <select class="form-select" id="priorityInput" required>
+                            <option value="1">1 - Thấp nhất</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5 - Cao nhất</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deadlineDateInput" class="form-label">Hạn hoàn thành</label>
+                        <div class="row g-2">
+                            <div class="col-7 col-md-8">
+                                <input type="date" class="form-control" id="deadlineDateInput" required>
+                            </div>
+                            <div class="col-5 col-md-4">
+                                <input type="time" class="form-control" id="deadlineTimeInput" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="parentTaskSelect" class="form-label">Nhiệm vụ lớn (nếu có)</label>
+                        <select class="form-select" id="parentTaskSelect" disabled>
+                            <option value="">-- Không chọn --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assignedUsersSelect" class="form-label">Giao cho thành viên</label>
+                        <div class="searchable-select">
+                            <input type="text" class="form-control" id="assignedUsersInput" placeholder="Tìm kiếm thành viên..." disabled>
+                            <div class="searchable-dropdown d-none" id="assignedUsersDropdown"></div>
+                            <div id="assignedUsersChips" class="mt-2"></div>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Tạo nhiệm vụ</button>
+                    </div>
+                    <div id="formAlert" class="alert mt-3 d-none" role="alert"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/utils/api-client.js"></script>
+    <script src="/utils/auth-utils.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script src="/js/notifications.js"></script>
+    <script src="/js/create-task.js"></script>
+</body>
+</html>

@@ -16,6 +16,7 @@ public class File extends BaseEntity {
     private String name;
     private String type;
     private String path;
+    private Long size; // File size in bytes
 
     @ManyToOne
     @JoinColumn(name = "task_id")
@@ -24,4 +25,8 @@ public class File extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @ManyToOne
+    @JoinColumn(name = "task_submission_id")
+    private TaskApprovalLog taskSubmission;
 }

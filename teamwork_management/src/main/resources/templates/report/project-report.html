@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif; font-size: 12px; }
+        h1 { margin: 0 0 8px 0; }
+        .meta { margin: 4px 0 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #999; padding: 6px; }
+        th { background: #efefef; }
+        .lvl-1 { font-weight: 700; }
+        .lvl-2 { padding-left: 12px; }
+        .lvl-3 { padding-left: 24px; }
+    </style>
+</head>
+<body>
+<h1 th:text="${projectName}">Project Name</h1>
+<div class="meta">
+    <div><b>Status:</b> <span th:text="${status}">IN_PROGRESS</span> |
+        <b>Progress:</b> <span th:text="${progress}">58</span>%</div>
+    <div><b>Generated at:</b> <span th:text="${generatedAt}">2025-08-10T12:34:56</span></div>
+</div>
+
+<table id="report-table">
+    <thead>
+    <tr>
+        <th>#</th><th>Task ID</th><th>Title</th><th>Level</th>
+        <th>Priority</th><th>Status</th><th>Progress</th><th>Deadline</th><th>Assignee</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row: ${items}"
+        th:class="'lvl-' + ${row.level}">
+        <td th:text="${row.number}">1</td>
+        <td th:text="${row.taskId}">101</td>
+        <td th:text="${row.title}">Design API</td>
+        <td th:text="${row.level}">1</td>
+        <td th:text="${row.priority}">2</td>
+        <td th:text="${row.status}">IN_PROGRESS</td>
+        <td th:text="${row.progress}">30</td>
+        <td th:text="${row.deadline}">10/08/2025</td>
+        <td th:text="${row.topAssignee}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

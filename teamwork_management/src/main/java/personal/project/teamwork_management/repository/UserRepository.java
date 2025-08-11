@@ -28,4 +28,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
            "FROM User u WHERE u.id = :id")
     UserDto findUserDtoById(Long id);
 
+    @Query("SELECT new personal.project.teamwork_management.dto.UserDto(" +
+            "u.id, u.firstName, u.lastName, u.email, u.phoneNumber, u.dob) " +
+           "FROM User u WHERE u.email = :email")
+    UserDto findUserDtoByEmail(String email);
+
 }

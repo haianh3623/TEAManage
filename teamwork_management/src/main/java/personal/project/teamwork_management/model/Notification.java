@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 public class Notification extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String message;
 
@@ -21,4 +18,8 @@ public class Notification extends BaseEntity {
     private Long userId;
 
     private boolean isRead;
+
+    private Long relatedId;
+
+    private String relatedType;
 }

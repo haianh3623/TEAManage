@@ -26,6 +26,13 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${SPRING_FILE_MAX_FILE_SIZE:10MB}
+      max-request-size: ${SPRING_FILE_MAX_REQUEST_SIZE:10MB}
+      location: ${java.io.tmpdir}
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -42,9 +49,9 @@ spring:
     header-string: Authorization
 
   file:
-    upload-dir: ./uploads
-    max-file-size: 10MB
-    max-request-size: 10MB
+    upload-dir: ${SPRING_FILE_UPLOAD_DIR:/app/uploads}
+    max-file-size: ${SPRING_FILE_MAX_FILE_SIZE:10MB}
+    max-request-size: ${SPRING_FILE_MAX_REQUEST_SIZE:10MB}
 
   logging:
     level:

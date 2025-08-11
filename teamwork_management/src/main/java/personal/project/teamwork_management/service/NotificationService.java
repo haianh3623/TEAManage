@@ -18,12 +18,17 @@ public class NotificationService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    public Notification createNotification(String message, NotificationType type, Long userId) {
+    public Notification createNotification(String message, NotificationType type, Long userId,
+                                            Long relatedId, String relatedType) {
         Notification notification = new Notification();
         notification.setMessage(message);
         notification.setType(type);
         notification.setUserId(userId);
         notification.setRead(false);
+        if(relatedId != null && relatedType != null) {
+            notification.setRelatedId(relatedId);
+            notification.setRelatedType(relatedType);
+        }
         notification = notificationRepository.save(notification);
 
         // Send real-time notification

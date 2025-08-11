@@ -24,6 +24,14 @@ public class UserService {
     @Autowired
     JwtUtil jwtUtil;
 
+    public UserDto getUserProfile(){
+        User user = getCurrentUser();
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getDob());
+    }
+
     public User registerUser(UserRegistrationDto dto) {
         User user = new User();
         System.out.println(dto);
@@ -95,6 +103,10 @@ public class UserService {
             return ((CustomUserDetails) auth.getPrincipal()).getUser();
         }
         throw new RuntimeException("Không thể lấy thông tin người dùng hiện tại");
+    }
+
+    public UserDto getUserByEmail(String email){
+        return userRepository.findUserDtoByEmail(email);
     }
 
     public List<UserDto> getUsers(){

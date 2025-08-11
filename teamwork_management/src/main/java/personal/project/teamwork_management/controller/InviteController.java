@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.project.teamwork_management.dto.InviteCodeDTO;
+import personal.project.teamwork_management.model.InviteCode;
 import personal.project.teamwork_management.service.InviteService;
 
 @RestController
@@ -17,16 +19,17 @@ public class InviteController {
     private InviteService inviteService;
 
     @PostMapping("/generate")
-    public ResponseEntity<String> generate(@RequestParam Long projectId) {
+    public ResponseEntity<?> generate(@RequestParam Long projectId) {
         System.out.println("Generating invite code for project ID: " + projectId);
-        String code = inviteService.createInviteCode(projectId);
+        InviteCodeDTO code = inviteService.createInviteCode(projectId);
         return ResponseEntity.ok(code);
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestParam String code) {
-        inviteService.joinProjectByCode(code);
-        return ResponseEntity.ok("Tham gia dự án thành công");
+    public ResponseEntity<?> join(@RequestParam String code) {
+
+        return ResponseEntity.ok(inviteService.joinProjectByCode(code));
+
     }
 }
 

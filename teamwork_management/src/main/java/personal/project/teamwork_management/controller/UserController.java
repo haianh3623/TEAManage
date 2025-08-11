@@ -18,6 +18,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(){
+        try {
+            return ResponseEntity.ok(userService.getUserProfile());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching user profile: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto userRegistrationDto) {
         try {
@@ -25,6 +34,16 @@ public class UserController {
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error registering user: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
+        try {
+            UserDto user = userService.getUserByEmail(email);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching user by email: " + e.getMessage());
         }
     }
 
@@ -37,7 +56,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(userService.getUserById(id));
@@ -46,7 +65,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto dto) {
         try {
             UserDto updatedUser = userService.updateUser(id, dto);
@@ -56,7 +75,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}/password")
+    @PutMapping("/{id:\\d+}/password")
     public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody ChangePasswordDto changePasswordDto) {
         try {
             userService.changePassword(id, changePasswordDto);
@@ -66,7 +85,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);

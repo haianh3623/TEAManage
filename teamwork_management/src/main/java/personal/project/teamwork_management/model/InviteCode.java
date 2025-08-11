@@ -21,8 +21,6 @@ public class InviteCode {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    private boolean used = false;
-
     private Date createdAt = new Date();
 
     private Date expiresAt; // ví dụ: sau 24h

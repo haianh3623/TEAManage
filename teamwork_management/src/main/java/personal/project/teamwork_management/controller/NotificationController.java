@@ -15,11 +15,14 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    @PostMapping
-    public Notification createNotification(@RequestParam String message,
-                                           @RequestParam NotificationType type,
-                                           @RequestParam Long userId) {
-        return notificationService.createNotification(message, type, userId);
+    // Test endpoint để tạo notification
+    @PostMapping("/test")
+    public Notification createTestNotification(@RequestParam String message,
+                                             @RequestParam NotificationType type,
+                                             @RequestParam Long userId,
+                                             @RequestParam(required = false) Long relatedId,
+                                             @RequestParam(required = false) String relatedType) {
+        return notificationService.createNotification(message, type, userId, relatedId, relatedType);
     }
 
     @GetMapping("/unread/{userId}")

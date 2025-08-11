@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body {
+            font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+        h1 {
+            margin: 0 0 8px 0;
+        }
+        .meta {
+            margin: 4px 0 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 6px;
+            text-align: center;
+        }
+        th {
+            background: #efefef;
+        }
+        .highlight {
+            font-weight: bold;
+            background: #dff0d8;
+        }
+        .low-score {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Báo cáo đánh giá thành viên dự án</h1>
+<div class="meta">
+    <div><b>Dự án:</b> <span th:text="${projectName}">Tên dự án</span></div>
+    <div>
+        <b>Thời gian báo cáo:</b>
+        <span th:text="${fromDate}">01/08/2025</span> - <span th:text="${toDate}">10/08/2025</span>
+    </div>
+    <div><b>Ngày tạo:</b> <span th:text="${generatedAt}">2025-08-11T12:34:56</span></div>
+</div>
+
+<table id="report-table">
+    <thead>
+    <tr>
+        <th>Hạng</th>
+        <th>Thành viên</th>
+        <th>Số task được giao</th>
+        <th>Task đúng deadline</th>
+        <th>Task trễ deadline</th>
+        <th>Tự khởi tạo task</th>
+        <th>Số submission</th>
+        <th>Approval</th>
+        <th>Reject</th>
+        <th>Điểm tổng</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row, iterStat : ${items}">
+        <td th:text="${row.rank}">1</td>
+        <td th:text="${row.memberName}">Nguyễn Văn A</td>
+        <td th:text="${row.assignedTasks}">10</td>
+        <td th:text="${row.onTimeTasks}">8</td>
+        <td th:text="${row.lateTasks}">2</td>
+        <td th:text="${row.selfCreatedTasks}">1</td>
+        <td th:text="${row.submissions}">5</td>
+        <td th:text="${row.approvals}">4</td>
+        <td th:text="${row.rejects}">1</td>
+        <td th:text="${row.totalScore}"
+            th:class="${row.totalScore < 50} ? 'low-score' : 'highlight'">85</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

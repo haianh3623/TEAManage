@@ -7,6 +7,7 @@ import personal.project.teamwork_management.model.Role;
 @Data
 @AllArgsConstructor
 public class MemberDto {
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;

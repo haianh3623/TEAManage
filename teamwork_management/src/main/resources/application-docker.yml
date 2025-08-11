@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: teamwork_management
+
+  security:
+    user:
+      name: admin
+      password: admin123
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, profile, email
+        provider:
+            google:
+                authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+                token-uri: https://oauth2.googleapis.com/token
+                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+                user-name-attribute: sub
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/teamwork_management?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true}
+    username: ${SPRING_DATASOURCE_USERNAME:teamuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:teampassword}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  jwt:
+    secret: ${JWT_SECRET:263480134625fe78955ba600bd2ef5b9}
+    expiration: ${JWT_EXPIRATION:3600}
+    token-prefix: Bearer
+    header-string: Authorization
+
+  file:
+    upload-dir: ${SPRING_FILE_UPLOAD_DIR:/app/uploads}
+    max-file-size: ${SPRING_FILE_MAX_FILE_SIZE:10MB}
+    max-request-size: ${SPRING_FILE_MAX_REQUEST_SIZE:10MB}
+
+  servlet:
+    multipart:
+      max-file-size: ${SPRING_FILE_MAX_FILE_SIZE:10MB}
+      max-request-size: ${SPRING_FILE_MAX_REQUEST_SIZE:10MB}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.web: INFO
+    personal.project.teamwork_management: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /app/logs/application.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
